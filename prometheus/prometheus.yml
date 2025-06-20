@@ -3,4 +3,4 @@ global:
 scrape_configs:
   - job_name: 'student-api'
     static_configs:
-      - targets: ['api:8000']
+      - targets: ['192.168.58.103:8000']
