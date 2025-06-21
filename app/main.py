@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from app.routers import students, teachers, subjects, mappings
 from fastapi.responses import Response
-from app.metrics import MetricMiddleware
+from app.metrics import MetricMiddleware, update_business_metrics
 
 app = FastAPI(title="Student Monitoring API")
 
@@ -19,4 +19,5 @@ def root():
 
 @app.get("/metrics")
 def metrics():
+    update_business_metrics()
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
