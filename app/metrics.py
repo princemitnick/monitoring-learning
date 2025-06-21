@@ -27,6 +27,18 @@ TOTAL_MAPPINGS = Gauge(
     "Nombre total de correspondances etudiants-professeur"
 )
 
+SUBJECT_ACCESS_HISTOGRAM = Histogram(
+    "subject_access_duration_seconds",
+    "Temps de traitement des requêtes par matière",
+    ["subject"]
+)
+
+REQUESTS_BY_IP = Counter(
+    "api_requests_by_ip_total",
+    "Nombre total de requêtes par adresse IP",
+    ["ip"]
+)
+
 class MetricMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
@@ -36,6 +48,9 @@ class MetricMiddleware(BaseHTTPMiddleware):
         endpoint = request.url.path
         REQUEST_COUNT.labels(request.method, endpoint).inc()
         REQUEST_LATENCY.labels(endpoint).observe(process_time)
+        client_ip = request.client.host
+        REQUESTS_BY_IP.labels(client_ip).inc()
+
         return response
 
 def update_business_metrics():

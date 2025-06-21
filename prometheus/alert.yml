@@ -1,0 +1,11 @@
+groups:
+  - name: student_alerts
+    rules:
+      - alert: StudentCountTooLow
+        expr: total_students < 5
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Nombre d'étudiants trop bas"
+          description: "Le total d'étudiants est inférieur à 5 depuis 30 secondes"
